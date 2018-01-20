@@ -13,25 +13,12 @@ export default class App extends React.Component {
     this.submitIngredients = this.submitIngredients.bind(this);
   }
   addIngredient = () => {
-    var arr = ['test', 'shit'];
-    fetch('https://cook-my-fridge.herokuapp.com/getRecipes', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ingredients: arr,
-      }),
-    })
-    .then((response) => response.json())
-    .then((responseJson) => {
-      this.setState({valid: true});
-      this.setState({text: responseJson.name})
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+    //this.setState({ingredients: this.state.ingredients + this.state.text})
+    var newIngredient = this.state.ingredients.slice();
+    
+    this.state.ingredients.push(this.state.text);
+    this._textInput.setNativeProps({text: ''});
+    this.state.text = "";
     // var xhttp = new XMLHttpRequest();
     // xhttp.onreadystatechange = function() {
     //   if (this.readyState == 4 && this.status == 200) {
@@ -57,8 +44,9 @@ export default class App extends React.Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
+      console.log(responseJson)
       this.setState({valid: true});
-      this.setState({text: responseJson.name})
+      this.setState({text: responseJson[0].name})
     })
     .catch((error) => {
       console.error(error);
@@ -66,32 +54,41 @@ export default class App extends React.Component {
   }
 
   render() {
-    const Test = () => {
-      if (this.state.valid === true) {
-        return (
-          <Text>{this.state.text}</Text>
-        );
+    const DisplayCurrIngredients = () => {
+      /*var retv = new Array();
+      for (var item in this.state.ingredients){
+        retv = retv.concat(<Text>{item}</Text>);
       }
-      else {
-        return null;
-      }
+      return retv;*/
+      return (<View>{ this.state.ingredients.map((item, key)=>(
+        <Text> { item } </Text>)
+        )}</View>);
+      //return "<Text>{this.state.text}</Text>";
     }
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Cook My Fridge</Text>
-        <Text>Made for people who can't cook.</Text>
-        <View style={{padding: 30}}>
+        <View style= {{flex:2}}>
+          <Text style={styles.title}>Cook My Fridge</Text>
+          <Text>Made for people who can't cook.</Text>
+        </View>
+        <View style={{flex: 1, padding: 30}}>
           <TextInput
+            ref={component => this._textInput = component}
             style={{height: 40, borderColor: 'gray', borderWidth: 1, width: 300, padding: 10}}
-            placeholder="Search..."
+            placeholder="Add Ingredient"
             onChangeText={(text) => this.setState({text})}
           />
           <Button
             onPress={this.addIngredient}
-            title="Search"
+            title="Add Ingredient"
             color="#841584"
             accessibilityLabel="Learn more about this purple button"
           />
+        </View>
+        <View style = {{flex:4}}>
+          <DisplayCurrIngredients/>
+        </View>
+        <View style = {{flex:1}}>
           <Button
             onPress={this.submitIngredients}
             title="Go"
@@ -99,7 +96,7 @@ export default class App extends React.Component {
             accessibilityLabel="Learn more about this purple button"
             style={{position: 'absolute', bottom: 0, zIndex: 100}}
           />
-          <Test/>
+          
         </View>
       </View>
     );
@@ -108,7 +105,7 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0.5,
+    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
