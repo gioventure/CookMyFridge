@@ -21,6 +21,8 @@
   "dependencies": {
     "expo": "^23.0.4",
     "react": "16.0.0",
-    "react-native": "0.50.3"
+    "react-native": "0.50.3",
+    "watchman": "^1.0.0",
+    "watson-developer-cloud": "^3.0.4"
   }
 }
