@@ -7,7 +7,6 @@ const express = require('express'),
 	app = express(),
 	mongoURI = "mongodb://CookMyFridge:redbull@ds111138.mlab.com:11138/cook-my-fridge";
 
-console.log(mongoURI);
 MongoClient.connect(mongoURI , function(err, db) {
   assert.equal(null, err);
   console.log("Connected successfully to Mongo server");
