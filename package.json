@@ -1,0 +1,23 @@
+{
+  "name": "cook-my-fridge",
+  "version": "1.0.0",
+  "description": "An app to suggest recipes from ingredient images",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ng-tony/CookMyFridge.git"
+  },
+  "author": "Andrew Ngyuen, Samee\u001b[D\u001b[D\u001b[D\u001b[D\u001b[DTony Ng, Mit Kapadia, Sameer Mehta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ng-tony/CookMyFridge/issues"
+  },
+  "homepage": "https://github.com/ng-tony/CookMyFridge#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "mongodb": "^3.0.1"
+  }
+}
