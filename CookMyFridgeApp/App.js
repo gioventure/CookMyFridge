@@ -68,6 +68,10 @@ export default class App extends React.Component {
   }
 
   submitIngredients = () => {
+    ingre = this.state.ingredients;
+    for (i in ingre){
+      ingre[i] = ingre[i][0].toUpperCase() + ingre[i].substr(1);
+    }
     fetch('https://cook-my-fridge.herokuapp.com/getRecipes', {
       method: 'POST',
       headers: {
@@ -75,7 +79,7 @@ export default class App extends React.Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ingredients: this.state.ingredients,
+        ingredients: ingre,
       }),
     })
     .then((response) => response.json())
