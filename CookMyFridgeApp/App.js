@@ -132,31 +132,33 @@ export default class App extends React.Component {
     //alert(Object.keys(this.state.recipe))
     return (
       <View style={styles.container}>
-        <View style= {{flex:2, paddingTop:80}}>
+        <View style= {{flex:1, paddingTop:80}}>
           <Text style={styles.title}>Cook My Fridge</Text>
           <Text>Made for people who cannot cook.</Text>
         </View>
-        <View style = {{flex:4, padding: 30}}>
-          <Text style={{fontSize:30}}>{this.state.recipe.name}</Text>
+        <View style = {{flex:4, padding: 0}}>
+          <Text style={{fontSize:30, fontWeight:'bold'}}>{this.state.recipe.name}</Text>
           <Image
                   resizeMode="cover"
                   style={styles.imageBigly}
                   source={{ uri: this.state.recipe.image }}
                 />
-          <Text>{function(ingredients){
+          <Text><Text style={{fontWeight:'bold'}}>Ingredients: </Text>{function(ingredients){
             var retv = "";
             for (i in ingredients){
               retv += ingredients[i] + ' ';
             }
             return retv;
           }(this.state.recipe.ingredients)}</Text>
+          <Text>{'\n'}</Text>
+          <Text style={{fontWeight:'bold'}}>Directions:</Text>
           <Text>{this.state.recipe.recipe}</Text>
         </View>
         <View style = {{flex:1}}>
           <Button
             rounded
             onPress={this.goResultPage}
-            title="FIND A RECIPE"
+            title="BACK"
             backgroundColor="#60A65F"
             color="#FFFFFF"
           />
@@ -213,11 +215,11 @@ export default class App extends React.Component {
     }
     return (
       <View style={styles.container}>
-        <View style= {{flex:2, paddingTop:80}}>
+        <View style= {{flex:1, paddingTop:80}}>
           <Text style={styles.title}>Cook My Fridge</Text>
           <Text>Made for people who cannot cook.</Text>
         </View>
-        <View style = {{flex:4, padding: 30}}>
+        <View style = {{flex:4, padding: 0}}>
           <DisplayRecipeCards/>
         </View>
         <View style = {{flex:1}}>
@@ -244,7 +246,7 @@ export default class App extends React.Component {
     }
     return (
       <View style={styles.container}>
-        <View style= {{flex:2, paddingTop:80}}>
+        <View style= {{flex:1, paddingTop:80}}>
           <Text style={styles.title}>Cook My Fridge</Text>
           <Text>Made for people who cannot cook.</Text>
         </View>

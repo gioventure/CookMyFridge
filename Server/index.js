@@ -41,7 +41,7 @@ app.post('/getRecipes/', function(req, res) {
         assert.equal(null, err);
         const db = client.db("cook-my-fridge");
         const collection = db.collection('recipes');
-        collection.find({"ingredients": { "$all": ingredients}}).limit(3).toArray(function(err, docs){
+        collection.find({"ingredients": { "$all": ingredients.toLowerCase()}}).limit(3).toArray(function(err, docs){
             console.log(docs);
             res.send(docs);
         })
