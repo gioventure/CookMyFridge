@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
-import { SearchBar, Icon, Badge, Button } from 'react-native-elements';
+import { SearchBar, Icon, Badge, Button, Card } from 'react-native-elements';
 import { Camera, Permissions, ImagePicker } from 'expo';
 // import { Camera, Permissions } from 'expo';
 
@@ -77,7 +77,12 @@ export default class App extends React.Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      alert("hello" + JSON.stringify(responseJson));
+      //alert("hello" + JSON.stringify(responseJson));
+      if (JSON.stringify(responseJson) == "[]"){
+        alert("No Results Found.")
+        this.reset();
+        return
+      }
       this.setState({
         isVisible: true,
         results: responseJson,
@@ -110,16 +115,47 @@ export default class App extends React.Component {
   render_results() {
     const DisplayRecipeCards = () => {
       return (
-
-        <View>{ this.state.results.map((item)=>(
+      <View style={{flex:1}}>
+        {
+          this.state.results.map((u, i) => {
+            return (
+              <Card key={i} containerStyle={{padding:0, width:300, height:75}}>
+              <View style={{flexDirection: 'row'}}>
+                <Image
+                  resizeMode="cover"
+                  style={styles.image}
+                  source={{ uri: u.image }}
+                />
+                <Text style={styles.subtitle}>{u.name}</Text>
+                </View>
+              </Card>
+            );
+          })
+        }
+      </View>
+      )
+     /*   <Card containerStyle={{padding:0}}>
+        {
+          this.state.results.map((u, i) => {
+            return (
+              <View key={i} style = {{flex: 1}}>
+                <Image
+                  resizeMode="cover"
+                  source={{ uri: u.image }}
+                />
+                <Text style={styles.name}>{u.name}</Text>
+              </View>
+            );
+          })
+        }
+        </Card>)*/ /*
+        <View>{ this.state.results.map((item, key)=>(
           <View style={{height:75, marginTop: 5}}>
           <Text>{item.name}</Text>
           </View>
-          /*<Badge containerStyle={{ backgroundColor: '#60A65F', flexDirection: 'row'}}><Icon name='close' color='#FFFFFF' onPress={() => this.deleteIngredient(item)}/><Text style = {{color:'white'}}>{item}</Text></Badge></View>)
-        )}*/
       ))}
         </View>
-      );
+      );*/
     }
     return (
       <View style={styles.container}>
@@ -127,7 +163,7 @@ export default class App extends React.Component {
           <Text style={styles.title}>Cook My Fridge</Text>
           <Text>Made for people who cannot cook.</Text>
         </View>
-        <View style = {{flex:4}}>
+        <View style = {{flex:4, padding: 30}}>
           <DisplayRecipeCards/>
         </View>
         <View style = {{flex:1}}>
@@ -146,8 +182,8 @@ export default class App extends React.Component {
   render_home() {
     const DisplayCurrIngredients = () => {
       return (
-        <View>{ this.state.ingredients.map((item)=>(
-          <View style={{marginTop: 5}}><Badge containerStyle={{ backgroundColor: '#60A65F', flexDirection: 'row'}}><Icon name='close' color='#FFFFFF' onPress={() => this.deleteIngredient(item)}/><Text style = {{color:'white'}}>{item}</Text></Badge></View>)
+        <View>{ this.state.ingredients.map((item, key)=>(
+          <View key={key} style={{marginTop: 5}}><Badge containerStyle={{ backgroundColor: '#60A65F', flexDirection: 'row'}}><Icon name='close' color='#FFFFFF' onPress={() => this.deleteIngredient(item)}/><Text style = {{color:'white'}}>{item}</Text></Badge></View>)
         )}
         </View>
       );
@@ -209,6 +245,19 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: 'bold',
   },
+  subtitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  user: {
+    flexDirection: 'row',
+    marginBottom: 6,
+  },
+  image: {
+    width: 75,
+    height: 75,
+    marginRight: 10,
+},
 
 });
 
