@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
 import { SearchBar, Icon, Badge, Button } from 'react-native-elements';
+import { Camera, Permissions, ImagePicker } from 'expo';
 // import { Camera, Permissions } from 'expo';
 
 
@@ -15,6 +16,7 @@ export default class App extends React.Component {
     this.addIngredient = this.addIngredient.bind(this);
     this.submitIngredients = this.submitIngredients.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
+    this.startCamera = this.startCamera.bind(this);
     //this.deleteIngredient = this.deleteIngredient.bind(this);
   }
   addIngredient = () => {
@@ -40,6 +42,19 @@ export default class App extends React.Component {
     this.setState({
       text: ""
     });
+  }
+
+  startCamera(){
+    takeAndUploadPhotoAsync().then((resp, data) => {
+      resp = JSON.parse(JSON.stringify(resp));
+      //var keys = Object.keys(resp);
+      //alert(JSON.stringify(keys));
+      var sortedList = JSON.parse(resp._bodyInit).images[0].classifiers[0].classes.sort((a,b) => {
+        return a.score < b.score; 
+      });
+      this.setState({"text":sortedList[0].class})
+      //alert(JSON.stringify(sortedList[0].class));
+    })
   }
 
   submitIngredients = () => {
@@ -94,6 +109,12 @@ name='rowing' />
             backgroundColor="#FFFFFF"
             color="green"
           />
+          <Button
+            onPress={this.startCamera}
+            title="Picture"
+            backgroundColor = "#FFFFFF"
+            color="purple"
+          />
         </View>
         <View style = {{flex:3}}>
           <DisplayCurrIngredients/>
@@ -128,3 +149,37 @@ const styles = StyleSheet.create({
   },
 
 });
+
+async function takeAndUploadPhotoAsync() {
+  // Display the camera to the user and wait for them to take a photo or to cancel
+  // the action
+  let result = await ImagePicker.launchCameraAsync({
+    allowsEditing: false,
+    aspect: [4, 3],
+  });
+
+  if (result.cancelled) {
+    return;
+  }
+
+  // ImagePicker saves the taken photo to disk and returns a local URI to it
+  let localUri = result.uri;
+  let filename = localUri.split('/').pop();
+
+  // Infer the type of the image
+  let match = /\.(\w+)$/.exec(filename);
+  let type = match ? `image/${match[1]}` : `image`;
+
+  // Upload the image using the fetch and FormData APIs
+  let formData = new FormData();
+  // Assume "photo" is the name of the form field the server expects
+  formData.append('photo', { uri: localUri, name: filename, type });
+
+  return await fetch('https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=9e9ef1bd4cc1a890cb8bb52ff799f425f4b93919&version=2016-05-20', {
+    method: 'POST',
+    body: formData,
+    header: {
+      'content-type': 'multipart/form-data',
+    },
+  });
+}
