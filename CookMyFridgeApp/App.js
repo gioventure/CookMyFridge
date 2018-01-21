@@ -14,6 +14,7 @@ export default class App extends React.Component {
       ingredients: [],
       isVisible: false,
       view: "Home",
+      results: []
     };
     this.addIngredient = this.addIngredient.bind(this);
     this.submitIngredients = this.submitIngredients.bind(this);
@@ -78,7 +79,9 @@ export default class App extends React.Component {
     .then((responseJson) => {
       alert("hello" + JSON.stringify(responseJson));
       this.setState({
-        isVisible: true
+        isVisible: true,
+        results: responseJson,
+        view: "Results"
       });
       //this.setState({valid: true});
       //this.setState({text: responseJson[0].name})
@@ -87,14 +90,59 @@ export default class App extends React.Component {
       console.error(error);
     });
   }
+  reset = () => {
+    this.setState({
+      text: "",
+      valid: false,
+      ingredients: [],
+      isVisible: false,
+      view: "Home",
+    });
+  }
   render(){
     if (this.state.view == "Home"){
       return this.render_home();
-    } else if (this.state.view == "Result"){
-    return this.render_home();
+    } else if (this.state.view == "Results"){
+      return this.render_results();
     }
     return this.render_home();
   }
+  render_results() {
+    const DisplayRecipeCards = () => {
+      return (
+
+        <View>{ this.state.results.map((item)=>(
+          <View style={{height:75, marginTop: 5}}>
+          <Text>{item.name}</Text>
+          </View>
+          /*<Badge containerStyle={{ backgroundColor: '#60A65F', flexDirection: 'row'}}><Icon name='close' color='#FFFFFF' onPress={() => this.deleteIngredient(item)}/><Text style = {{color:'white'}}>{item}</Text></Badge></View>)
+        )}*/
+      ))}
+        </View>
+      );
+    }
+    return (
+      <View style={styles.container}>
+        <View style= {{flex:2, paddingTop:80}}>
+          <Text style={styles.title}>Cook My Fridge</Text>
+          <Text>Made for people who cannot cook.</Text>
+        </View>
+        <View style = {{flex:4}}>
+          <DisplayRecipeCards/>
+        </View>
+        <View style = {{flex:1}}>
+          <Button
+            rounded
+            onPress={this.reset}
+            title="FIND A RECIPE"
+            backgroundColor="#60A65F"
+            color="#FFFFFF"
+          />
+          </View>
+      </View>
+      )
+  }
+
   render_home() {
     const DisplayCurrIngredients = () => {
       return (
