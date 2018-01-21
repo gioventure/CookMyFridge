@@ -87,8 +87,6 @@ export default class App extends React.Component {
         )}
         </View>
       );
-      <Icon
-name='rowing' />
     }
     return (
       <View style={styles.container}>
