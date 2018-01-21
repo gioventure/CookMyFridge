@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableWithoutFeedback, TouchableHighlight } from 'react-native';
 import { SearchBar, Icon, Badge, Button, Card } from 'react-native-elements';
 import { Camera, Permissions, ImagePicker } from 'expo';
 // import { Camera, Permissions } from 'expo';
@@ -14,12 +14,15 @@ export default class App extends React.Component {
       ingredients: [],
       isVisible: false,
       view: "Home",
-      results: []
+      results: [],
+      recipe: {},
     };
     this.addIngredient = this.addIngredient.bind(this);
     this.submitIngredients = this.submitIngredients.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
     this.startCamera = this.startCamera.bind(this);
+    this.goRecipePage = this.goRecipePage.bind(this);
+    this.goResultPage = this.goResultPage.bind(this);
     //this.deleteIngredient = this.deleteIngredient.bind(this);
   }
   addIngredient = () => {
@@ -104,13 +107,62 @@ export default class App extends React.Component {
       view: "Home",
     });
   }
+  goResultPage = () => {
+    this.setState({
+      view: "Results"
+    });
+  }
+  goRecipePage = (recipe) => {
+    this.setState({
+      view: "Recipe",
+      "recipe": recipe
+    });
+  }
   render(){
     if (this.state.view == "Home"){
       return this.render_home();
     } else if (this.state.view == "Results"){
       return this.render_results();
+    } else if (this.state.view == "Recipe"){
+      return this.render_recipe();
     }
     return this.render_home();
+  }
+  render_recipe() {
+    //alert(Object.keys(this.state.recipe))
+    return (
+      <View style={styles.container}>
+        <View style= {{flex:2, paddingTop:80}}>
+          <Text style={styles.title}>Cook My Fridge</Text>
+          <Text>Made for people who cannot cook.</Text>
+        </View>
+        <View style = {{flex:4, padding: 30}}>
+          <Text style={{fontSize:30}}>{this.state.recipe.name}</Text>
+          <Image
+                  resizeMode="cover"
+                  style={styles.imageBigly}
+                  source={{ uri: this.state.recipe.image }}
+                />
+          <Text>{function(ingredients){
+            var retv = "";
+            for (i in ingredients){
+              retv += ingredients[i] + ' ';
+            }
+            return retv;
+          }(this.state.recipe.ingredients)}</Text>
+          <Text>{this.state.recipe.recipe}</Text>
+        </View>
+        <View style = {{flex:1}}>
+          <Button
+            rounded
+            onPress={this.goResultPage}
+            title="FIND A RECIPE"
+            backgroundColor="#60A65F"
+            color="#FFFFFF"
+          />
+          </View>
+      </View>
+      )
   }
   render_results() {
     const DisplayRecipeCards = () => {
@@ -119,7 +171,8 @@ export default class App extends React.Component {
         {
           this.state.results.map((u, i) => {
             return (
-              <Card key={i} containerStyle={{padding:0, width:300, height:75}}>
+              <Card key={i} containerStyle={{padding:0, width:300, height:75}} >
+              <TouchableWithoutFeedback onPress={this.goRecipePage.bind(null, u)}>
               <View style={{flexDirection: 'row'}}>
                 <Image
                   resizeMode="cover"
@@ -128,6 +181,7 @@ export default class App extends React.Component {
                 />
                 <Text style={styles.subtitle}>{u.name}</Text>
                 </View>
+                </TouchableWithoutFeedback>
               </Card>
             );
           })
@@ -257,7 +311,11 @@ const styles = StyleSheet.create({
     width: 75,
     height: 75,
     marginRight: 10,
-},
+  },
+  imageBigly: {
+    width: 300,
+    height: 175,
+  },
 
 });
 
