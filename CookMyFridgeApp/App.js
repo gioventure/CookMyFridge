@@ -12,6 +12,7 @@ export default class App extends React.Component {
       text: "",
       valid: false,
       ingredients: [],
+      isVisible: false,
     };
     this.addIngredient = this.addIngredient.bind(this);
     this.submitIngredients = this.submitIngredients.bind(this);
@@ -21,6 +22,9 @@ export default class App extends React.Component {
   }
   addIngredient = () => {
     //this.setState({ingredients: this.state.ingredients + this.state.text})
+    if(this.state.text === ""){
+      return;
+    }
     var newIngredient = this.state.ingredients.slice();
     newIngredient.push(this.state.text);
     this.setState({
@@ -50,7 +54,7 @@ export default class App extends React.Component {
       //var keys = Object.keys(resp);
       //alert(JSON.stringify(keys));
       var sortedList = JSON.parse(resp._bodyInit).images[0].classifiers[0].classes.sort((a,b) => {
-        return a.score < b.score; 
+        return a.score < b.score;
       });
       this.setState({"text":sortedList[0].class})
       //alert(JSON.stringify(sortedList[0].class));
@@ -71,6 +75,9 @@ export default class App extends React.Component {
     .then((response) => response.json())
     .then((responseJson) => {
       alert("hello" + JSON.stringify(responseJson));
+      this.setState({
+        isVisible: true
+      });
       //this.setState({valid: true});
       //this.setState({text: responseJson[0].name})
     })
@@ -100,7 +107,7 @@ export default class App extends React.Component {
           onChangeText={(text) => this.setState({text})}
           onClearText={this.clearSearch}
           placeholder='Enter an Ingredient...' />
-
+          <View style={{flex: 2, flexDirection: 'row'}}>
           <Button
             onPress={this.addIngredient}
             title="Add Ingredient"
@@ -113,6 +120,7 @@ export default class App extends React.Component {
             backgroundColor = "#FFFFFF"
             color="purple"
           />
+          </View>
         </View>
         <View style = {{flex:3}}>
           <DisplayCurrIngredients/>
@@ -127,7 +135,6 @@ export default class App extends React.Component {
             backgroundColor="#60A65F"
             color="#FFFFFF"
           />
-
         </View>
       </View>
     );
