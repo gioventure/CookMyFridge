@@ -50,6 +50,7 @@ export default class App extends React.Component {
 
   startCamera(){
     takeAndUploadPhotoAsync().then((resp, data) => {
+      //alert(data);
       resp = JSON.parse(JSON.stringify(resp));
       //var keys = Object.keys(resp);
       //alert(JSON.stringify(keys));
