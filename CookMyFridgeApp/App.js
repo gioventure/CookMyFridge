@@ -13,6 +13,7 @@ export default class App extends React.Component {
       valid: false,
       ingredients: [],
       isVisible: false,
+      view: "Home",
     };
     this.addIngredient = this.addIngredient.bind(this);
     this.submitIngredients = this.submitIngredients.bind(this);
@@ -87,6 +88,11 @@ export default class App extends React.Component {
     });
   }
   render(){
+    if (this.state.view == "Home"){
+      return this.render_home();
+    } else if (this.state.view == "Result"){
+    return this.render_home();
+    }
     return this.render_home();
   }
   render_home() {
