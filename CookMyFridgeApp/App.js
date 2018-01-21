@@ -79,8 +79,10 @@ export default class App extends React.Component {
       console.error(error);
     });
   }
-
-  render() {
+  render(){
+    return this.render_home();
+  }
+  render_home() {
     const DisplayCurrIngredients = () => {
       return (
         <View>{ this.state.ingredients.map((item)=>(
